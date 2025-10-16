@@ -97,6 +97,16 @@ mvn deploy
 ## 🧩 2. Nexus Repository Server (Staging)
 
 ### Setup Steps
+<img width="1920" height="1080" alt="3" src="https://github.com/user-attachments/assets/6e646768-e3bd-45df-a2ef-b6c9444a5e2e" />
+<img width="1920" height="1080" alt="28" src="https://github.com/user-attachments/assets/af011878-9cd9-44b9-a048-da771cefe81b" />
+<img width="1920" height="1080" alt="29" src="https://github.com/user-attachments/assets/b9ec9b66-c6d2-4670-b1fb-a16782311f0b" />
+<img width="1920" height="1080" alt="30" src="https://github.com/user-attachments/assets/2ee32615-3077-44b2-86e9-d024d31587ba" />
+<img width="1920" height="1080" alt="31" src="https://github.com/user-attachments/assets/4b4253ac-be08-4f17-97a5-422446e5c18e" />
+<img width="1920" height="1080" alt="32" src="https://github.com/user-attachments/assets/9cae658c-bb86-4240-9c6f-125b98d466d5" />
+<img width="1920" height="1080" alt="8" src="https://github.com/user-attachments/assets/685826b3-c4a3-476f-bb96-20f15fca2f70" />
+<img width="1920" height="1080" alt="9" src="https://github.com/user-attachments/assets/71c399b1-d176-4c9e-9757-e1e9ae11374f" />
+<img width="1920" height="1080" alt="10" src="https://github.com/user-attachments/assets/fca0a26b-e057-4eaf-997b-2840fc37bc9d" />
+
 
 ```bash
 sudo hostnamectl set-hostname nexus
@@ -117,7 +127,7 @@ sudo netstat -ntpl
 
 ### Access Nexus
 
-* **URL:** `http://<NEXUS-IP>:8081`
+* **URL:** `http://51.21.200.175:8081`
 * **Login:**
 
   * Username: `admin`
@@ -138,6 +148,12 @@ After each deployment:
 ## 🧾 3. Deploy Server (Tomcat Deployment)
 
 ### Setup
+<img width="1920" height="1080" alt="2" src="https://github.com/user-attachments/assets/3242a74a-2931-4071-9106-33eebceffa07" />
+<img width="1920" height="1080" alt="4" src="https://github.com/user-attachments/assets/19c34068-7e95-4099-833d-e53c031cc148" />
+<img width="1920" height="1080" alt="23" src="https://github.com/user-attachments/assets/ed80fc10-86eb-4f73-8bae-f042acbbfa48" />
+<img width="1920" height="1080" alt="24" src="https://github.com/user-attachments/assets/72dbc10a-018c-46c8-8cc1-e4cc50b93988" />
+<img width="1920" height="1080" alt="25" src="https://github.com/user-attachments/assets/751dc7b5-4f80-40ab-b481-80cfee4b1fd3" />
+
 
 ```bash
 sudo hostnamectl set-hostname deploy
@@ -167,6 +183,8 @@ sudo vi ./webapps/host-manager/META-INF/context.xml
 ---
 
 ### Deploy WAR Files (Progressive Versions)
+<img width="1920" height="1080" alt="26" src="https://github.com/user-attachments/assets/b0007f8c-ffd2-411d-b0e3-77d9c6148c91" />
+<img width="1920" height="1080" alt="27" src="https://github.com/user-attachments/assets/19feeddc-48e9-450b-90f0-7862c4d9ee44" />
 
 #### Deploy v0.0.1 (Addition Only)
 
@@ -261,6 +279,3 @@ A fully working **3-tier manual CI/CD pipeline** demonstrating Java web app buil
 ```
 
 ---
-
-Would you like me to **add diagrams (Mermaid flowcharts + architecture)** and **Maven settings.xml snippet** (with credentials placeholders) for a professional GitHub look? It’ll make your README standout visually.
-```
