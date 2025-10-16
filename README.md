@@ -1,75 +1,92 @@
-Here’s a **professional, GitHub-ready `README.md`** for your **Java Web Calculator project (Manual Build → Nexus Staging → Tomcat Deploy)** — based directly on the server command histories you provided.
-You can copy-paste it as-is into your repo root.
+# Java Web Calculator – Manual CI/CD (Multi-Version Deployment)
+
+This project demonstrates a **manual build–stage–deploy pipeline** for a **Java-based Web Calculator App**, progressively enhanced across **three versions**:
+
+| Version | Features Included | WAR File Name | Description |
+|----------|------------------|----------------|--------------|
+| **v0.0.1** | Addition only | `webapp-add-0.0.1.war` | Basic calculator with addition feature |
+| **v0.0.2** | Addition + Subtraction | `webapp-add-sub-0.0.2.war` | Enhanced version with subtraction functionality |
+| **v0.0.3** | Addition + Subtraction + Multiplication | `webapp-add-sub-mul-0.0.3.war` | Final version with multiplication added |
 
 ---
 
-````markdown
-# Java Web Calculator – Manual Build, Stage, and Deploy (3-Tier CI/CD Setup)
-
-This project demonstrates a **manual CI/CD pipeline** for a Java-based web calculator application using three EC2 servers:
-
-- **Build Server** – Compiles and packages the Java web app using Maven.  
-- **Nexus Staging Server** – Hosts the artifacts using Sonatype Nexus Repository Manager.  
-- **Deploy Server** – Runs Apache Tomcat to serve the deployed WAR file.
-
----
-
-## 🚀 Architecture Overview
+## ⚙️ Infrastructure Overview
 
 | Server | Purpose | Key Ports | Tools Installed |
 |---------|----------|------------|-----------------|
-| `build` | Build & package source code | 22 | OpenJDK 17, Maven, Git |
-| `nexus` | Stage & host artifacts | 22, 8081 | OpenJDK 17, Nexus Repository 3 |
-| `deploy` | Deploy WAR to Tomcat | 22, 8080 | OpenJDK 17, Apache Tomcat 9 |
+| **Build Server** | Compiles and packages the code using Maven | 22 | OpenJDK 17, Maven, Git |
+| **Nexus Server (Staging)** | Stores the `.war` artifacts | 22, 8081 | OpenJDK 17, Nexus Repository 3 |
+| **Deploy Server** | Hosts the final app via Tomcat | 22, 8080 | OpenJDK 17, Apache Tomcat 9 |
 
 ---
 
-## 🧱 1. Build Server Setup
+## 🧱 1. Build Server Setup & Packaging
+<img width="1920" height="1080" alt="1" src="https://github.com/user-attachments/assets/33b0dd78-72de-4971-874b-11e24cd2e46e" />
+<img width="1920" height="1080" alt="11" src="https://github.com/user-attachments/assets/d268255f-e184-47e0-b690-82d974f7c53d" />
+<img width="1920" height="1080" alt="12" src="https://github.com/user-attachments/assets/ccc80fe0-756b-4433-a9d2-9bbedaf05a32" />
+<img width="1920" height="1080" alt="13" src="https://github.com/user-attachments/assets/d4fdfb4c-8fcf-4008-a0c1-983646ba32c9" />
+<img width="1920" height="1080" alt="14" src="https://github.com/user-attachments/assets/d318fea3-3b9a-462d-b979-672b4d1ae038" />
 
 ### Steps
 ```bash
-# Set hostname
+# 1️⃣ Hostname setup
 sudo hostnamectl set-hostname build
 sudo init 6
 
-# System update & Java installation
+# 2️⃣ System update & Java installation
 sudo apt -y update
 sudo apt install openjdk-17-jre-headless -y
 
-# Verify Java installation
-java -version
-
-# Install Maven
+# 3️⃣ Install Maven
 sudo apt install maven -y
+java -version
 mvn -version
 
-# Clone the Java web calculator project
+# 4️⃣ Clone the repository
 git clone https://github.com/mrtechreddy/Java-Web-Calculator-App.git
 cd Java-Web-Calculator-App/
 
-# Validate & package the application
+# 5️⃣ Validate & package source
 mvn validate
 mvn clean package
 
-# Check generated WAR in target folder
+# 6️⃣ Verify WAR files in target/
 cd target/
 ls
 ````
 
-### Deploy Configuration (pom.xml)
+### Multi-Version Packaging Process
+<img width="1920" height="1080" alt="15" src="https://github.com/user-attachments/assets/3d19fd2b-a480-4551-98ca-5b8bf86568f9" />
+<img width="1920" height="1080" alt="16" src="https://github.com/user-attachments/assets/74eb8739-4f36-4a66-b643-d2953b3aa829" />
+<img width="1920" height="1080" alt="17" src="https://github.com/user-attachments/assets/e0a4be8f-8ab9-4139-9a7a-aa74a981e1ca" />
+<img width="1920" height="1080" alt="18" src="https://github.com/user-attachments/assets/1d357e44-09e9-4728-ae45-c363dedd82f9" />
+<img width="1920" height="1080" alt="19" src="https://github.com/user-attachments/assets/31f49672-a2f7-40cf-9e55-de7935bab7c3" />
+<img width="1920" height="1080" alt="20" src="https://github.com/user-attachments/assets/7aefe448-d36b-4e30-87a0-23030eade9b9" />
+<img width="1920" height="1080" alt="21" src="https://github.com/user-attachments/assets/ab2f3b44-0695-498d-b2f4-44c9d9d90b84" />
+<img width="1920" height="1080" alt="22" src="https://github.com/user-attachments/assets/c8072766-7572-4b62-8801-43f00ebd2fc8" />
 
-Edit your `pom.xml` to include Nexus repository credentials and URLs:
+Each time a feature is added, the app is **rebuilt with a version tag**:
+
+| Step | Feature Added          | Command                           | Output Artifact                |
+| ---- | ---------------------- | --------------------------------- | ------------------------------ |
+| 1    | Addition               | `mvn clean package`               | `webapp-add-0.0.1.war`         |
+| 2    | Addition + Subtraction | Update code → `mvn clean package` | `webapp-add-sub-0.0.2.war`     |
+| 3    | Addition + Sub + Mul   | Update code → `mvn clean package` | `webapp-add-sub-mul-0.0.3.war` |
+
+### Deploy to Nexus
+
+Update your `pom.xml` or `/etc/maven/settings.xml`:
 
 ```xml
 <distributionManagement>
   <repository>
-    <id>nexus</id>
-    <url>http://<NEXUS-IP>:8081/repository/Java-Cal-App/</url>
+    <id>Java-Cal-App</id>
+    <url>http://51.21.200.175:8081/repository/Java-Cal-App/</url>
   </repository>
 </distributionManagement>
 ```
 
-Then deploy:
+Then push build artifacts:
 
 ```bash
 mvn deploy
@@ -77,16 +94,13 @@ mvn deploy
 
 ---
 
-## 🧩 2. Nexus Server (Staging Repository)
+## 🧩 2. Nexus Repository Server (Staging)
 
-### Steps
+### Setup Steps
 
 ```bash
-# Set hostname
 sudo hostnamectl set-hostname nexus
 sudo init 6
-
-# System update & Java installation
 sudo apt -y update
 sudo apt install openjdk-17-jre-headless -y
 
@@ -97,35 +111,37 @@ cd nexus-3.85.0-03/bin/
 
 # Start Nexus service
 ./nexus start
-
-# Check running ports
 sudo apt install net-tools -y
 sudo netstat -ntpl
 ```
 
-### Nexus Access
+### Access Nexus
 
 * **URL:** `http://<NEXUS-IP>:8081`
-* **Default credentials:**
+* **Login:**
 
   * Username: `admin`
-  * Password: Found in
-    `/home/ubuntu/sonatype-work/nexus3/admin.password`
+  * Password: `/home/ubuntu/sonatype-work/nexus3/admin.password`
 
-Login → Create a hosted Maven repository named `Java-Cal-App`.
+Create a **hosted Maven repository** named `Java-Cal-App`.
+
+After each deployment:
+
+| Version | Artifact Path                                                                                |
+| ------- | -------------------------------------------------------------------------------------------- |
+| 0.0.1   | `/repository/Java-Cal-App/com/web/cal/webapp-add/0.0.1/webapp-add-0.0.1.war`                 |
+| 0.0.2   | `/repository/Java-Cal-App/com/web/cal/webapp-add-sub/0.0.2/webapp-add-sub-0.0.2.war`         |
+| 0.0.3   | `/repository/Java-Cal-App/com/web/cal/webapp-add-sub-mul/0.0.3/webapp-add-sub-mul-0.0.3.war` |
 
 ---
 
-## 🧾 3. Deploy Server (Tomcat Hosting)
+## 🧾 3. Deploy Server (Tomcat Deployment)
 
-### Steps
+### Setup
 
 ```bash
-# Set hostname
 sudo hostnamectl set-hostname deploy
 sudo init 6
-
-# System update & Java installation
 sudo apt -y update
 sudo apt install openjdk-17-jre-headless -y
 
@@ -134,96 +150,117 @@ wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.111/bin/apache-tomcat-9.0.111
 tar -xvzf apache-tomcat-9.0.111.tar.gz
 cd apache-tomcat-9.0.111/
 
-# Configure Tomcat users (manager & admin roles)
+# Configure admin access
 vi conf/tomcat-users.xml
-# Add inside <tomcat-users> tag:
+# Add:
 # <user username="admin" password="admin123" roles="manager-gui,admin-gui"/>
 
-# Allow remote access (edit these files):
+# Remove access restrictions
 sudo vi ./webapps/manager/META-INF/context.xml
 sudo vi ./webapps/host-manager/META-INF/context.xml
-# Comment out or remove the <Valve ...> restriction line.
+# Comment out or remove <Valve ...> line
 
 # Start Tomcat
 ./bin/startup.sh
 ```
 
-### Deploy WAR from Nexus
+---
+
+### Deploy WAR Files (Progressive Versions)
+
+#### Deploy v0.0.1 (Addition Only)
 
 ```bash
 cd apache-tomcat-9.0.111/webapps/
+wget http://<NEXUS-IP>:8081/repository/Java-Cal-App/com/web/cal/webapp-add/0.0.1/webapp-add-0.0.1.war
+```
 
-# Download the WAR directly from Nexus repository
+Access → `http://<DEPLOY-IP>:8080/webapp-add`
+
+#### Deploy v0.0.2 (Add + Sub)
+
+```bash
+wget http://<NEXUS-IP>:8081/repository/Java-Cal-App/com/web/cal/webapp-add-sub/0.0.2/webapp-add-sub-0.0.2.war
+```
+
+Access → `http://<DEPLOY-IP>:8080/webapp-add-sub`
+
+#### Deploy v0.0.3 (Add + Sub + Mul)
+
+```bash
 wget http://<NEXUS-IP>:8081/repository/Java-Cal-App/com/web/cal/webapp-add-sub-mul/0.0.3/webapp-add-sub-mul-0.0.3.war
 ```
 
-Restart Tomcat:
+Access → `http://<DEPLOY-IP>:8080/webapp-add-sub-mul`
+
+Restart Tomcat after each deployment:
 
 ```bash
 ./bin/shutdown.sh
 ./bin/startup.sh
 ```
 
-Access application:
-
-```
-http://<DEPLOY-IP>:8080/webapp-add-sub-mul
-```
-
 ---
 
-## 🧮 Final Verification
+## 🧮 Validation Summary
 
-* **Build success:** WAR generated in `/target`
-* **Staging success:** WAR uploaded to Nexus repository
-* **Deployment success:** App accessible on Tomcat via port 8080
+| Stage  | Output                 | Verification                      |
+| ------ | ---------------------- | --------------------------------- |
+| Build  | `.war` in `/target`    | `ls target/`                      |
+| Stage  | Artifact in Nexus      | Nexus GUI → browse `Java-Cal-App` |
+| Deploy | App running in browser | Access via Tomcat on port 8080    |
 
 ---
 
 ## 🧰 Troubleshooting
 
-| Issue               | Possible Cause                      | Fix                                        |
-| ------------------- | ----------------------------------- | ------------------------------------------ |
-| Nexus not reachable | Service not started                 | `cd nexus-3.85.0-03/bin && ./nexus start`  |
-| WAR not uploaded    | Wrong credentials in `settings.xml` | Verify `<servers>` section in Maven config |
-| Tomcat 403 error    | Access restriction in `context.xml` | Comment out the `<Valve>` tag              |
-| WAR not deploying   | Filename mismatch                   | Ensure correct WAR version from Nexus      |
+| Issue               | Cause                  | Fix                                       |
+| ------------------- | ---------------------- | ----------------------------------------- |
+| Nexus not reachable | Service not started    | `cd nexus-3.85.0-03/bin && ./nexus start` |
+| Maven deploy fails  | Wrong repo credentials | Check `<servers>` in `settings.xml`       |
+| Tomcat 403 error    | Context.xml restricted | Comment out `<Valve>` line                |
+| WAR not visible     | Cached deployment      | Clear `/webapps` and redeploy             |
 
 ---
 
-## 📦 Tech Stack
+## 🧠 Tech Stack
 
 * **Java 17**
 * **Apache Maven 3**
 * **Sonatype Nexus 3**
 * **Apache Tomcat 9**
-* **Ubuntu 22.04 LTS (EC2)**
+* **Ubuntu 22.04 LTS (AWS EC2)**
 
 ---
 
-## 🧑‍💻 Author
+## 👨‍💻 Author
 
 **Sivaiah Jagadapi**
-*Power BI & DevOps Enthusiast | Java Build Automation Learner*
+*Power BI Developer | DevOps Learner | Cloud Automation Explorer*
 📍 Hyderabad, India
 🗂 [Glintsoft Infotech Pvt Ltd](https://www.glintsoft.com/)
-📧 *[sivaiah.jagadapi@example.com](mailto:sivaiah.jagadapi@example.com)*
+📧 [sivaiah.jagadapi@example.com](mailto:sivaiah.jagadapi@example.com)
 
 ---
 
-### 🏁 End-to-End Flow Summary
+## 🏁 End-to-End Flow (All Versions)
 
 ```
-Developer → Build Server → Nexus Repository → Deploy Server (Tomcat)
-      |            |              |                     |
-      |  mvn build |  mvn deploy  |  wget WAR & deploy  |
-```
-
----
-
+Source Code v1 → Build (Maven) → WAR v0.0.1 → Nexus Repo → Tomcat Deploy (Addition)
+        ↓
+Source Code v2 → Build (Maven) → WAR v0.0.2 → Nexus Repo → Tomcat Deploy (Add + Sub)
+        ↓
+Source Code v3 → Build (Maven) → WAR v0.0.3 → Nexus Repo → Tomcat Deploy (Add + Sub + Mul)
 ```
 
 ---
 
-Would you like me to **add command outputs and screenshots placeholders** (e.g., Maven build success, Nexus dashboard, Tomcat manager UI) to make the README more visually rich for GitHub? It’ll look professional and ready for your portfolio.
+✅ **Final Outcome:**
+A fully working **3-tier manual CI/CD pipeline** demonstrating Java web app build, artifact staging in Nexus, and deployment to Tomcat — versioned incrementally as new calculator features are added.
+
+```
+
+---
+
+Would you like me to **add diagrams (Mermaid flowcharts + architecture)** and **Maven settings.xml snippet** (with credentials placeholders) for a professional GitHub look? It’ll make your README standout visually.
 ```
